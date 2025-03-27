@@ -20,3 +20,6 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/kokkos/kokkos ${CMAKE_CU
 
 add_executable(field-4d-mdrange-axpy-halo field-4d-mdrange-axpy-halo.cpp)
 target_link_libraries(field-4d-mdrange-axpy-halo Kokkos::kokkos)
+
+add_executable(su3xsu3-stream-halo-static-mu-array-SUN su3xsu3-stream-halo-static-mu-array-SUN.cpp)
+target_link_libraries(su3xsu3-stream-halo-static-mu-array-SUN Kokkos::kokkos)
