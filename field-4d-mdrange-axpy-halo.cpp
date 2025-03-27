@@ -62,7 +62,7 @@ using val_t = Kokkos::complex<double>;
 constexpr val_t ainit(1.0, 0.1);
 constexpr val_t binit(1.1, 0.2);
 constexpr val_t cinit(1.3, 0.3);
-constexpr val_t dinit(1.4, 0.4);
+// constexpr val_t dinit(1.4, 0.4);
 
 #define HLINE "-------------------------------------------------------------\n"
 
@@ -328,6 +328,7 @@ int run_benchmark(const StreamIndex stream_array_size) {
   double axpy_h_offset_zt_Time      = std::numeric_limits<double>::max();
   double axpy_h_offset_xyz_Time     = std::numeric_limits<double>::max();
   double axpy_h_offset_xyt_Time     = std::numeric_limits<double>::max();
+  double axpy_h_offset_xzt_Time     = std::numeric_limits<double>::max();
   double axpy_h_offset_yzt_Time     = std::numeric_limits<double>::max();
   double axpy_h_offset_xyzt_Time    = std::numeric_limits<double>::max();
 
@@ -341,6 +342,7 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   deviceField x(stream_array_size, stream_array_size, stream_array_size, stream_array_size, ainit);
 
+  {
   deviceField y(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit);
   
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -351,9 +353,9 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   printf("axpy                     %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_Time);
+  }
 
-  Kokkos::kokkos_free(y.view.data());
-
+  {
   deviceField_h y_h_no_offset(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {0,0,0,0});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -365,8 +367,9 @@ int run_benchmark(const StreamIndex stream_array_size) {
   printf("axpy_h_no_offset         %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_no_offset_Time);
   
-  Kokkos::kokkos_free(y_h_no_offset.view.data());
+  }
 
+  {
   deviceField_h y_h_offset_x(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {1,0,0,0});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -377,9 +380,9 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   printf("axpy_h_offset_x          %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_x_Time);
+  }
 
-  Kokkos::kokkos_free(y_h_offset_x.view.data());
-
+  {
   deviceField_h y_h_offset_y(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {0,1,0,0});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -390,9 +393,9 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   printf("axpy_h_offset_y          %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_y_Time);
+  }
 
-  Kokkos::kokkos_free(y_h_offset_y.view.data());
-
+  {
   deviceField_h y_h_offset_z(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {0,0,1,0});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -403,9 +406,9 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   printf("axpy_h_offset_z          %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_z_Time);
+  }
 
-  Kokkos::kokkos_free(y_h_offset_z.view.data());
-
+  {
   deviceField_h y_h_offset_t(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {0,0,0,1});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -416,9 +419,9 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   printf("axpy_h_offset_t          %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_t_Time);
+  }
 
-  Kokkos::kokkos_free(y_h_offset_t.view.data());
-
+  {
   deviceField_h y_h_offset_xy(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {1,1,0,0});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -429,9 +432,9 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   printf("axpy_h_offset_xy         %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_xy_Time);
+  }
 
-  Kokkos::kokkos_free(y_h_offset_xy.view.data());
-
+  {
   deviceField_h y_h_offset_xz(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {1,0,1,0});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -442,9 +445,9 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   printf("axpy_h_offset_xz         %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_xz_Time);
+  }
 
-  Kokkos::kokkos_free(y_h_offset_xz.view.data());
-
+  {
   deviceField_h y_h_offset_xt(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {1,0,0,1});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -455,9 +458,9 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   printf("axpy_h_offset_xt         %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_xt_Time);
+  }
 
-  Kokkos::kokkos_free(y_h_offset_xt.view.data());
-
+  {
   deviceField_h y_h_offset_yz(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {0,1,1,0});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -468,9 +471,9 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   printf("axpy_h_offset_yz         %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_yz_Time);
+  }
 
-  Kokkos::kokkos_free(y_h_offset_yz.view.data());
-
+  {
   deviceField_h y_h_offset_yt(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {0,1,0,1});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -481,9 +484,9 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   printf("axpy_h_offset_yt         %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_yt_Time);
+  }
 
-  Kokkos::kokkos_free(y_h_offset_yt.view.data());
-
+  {
   deviceField_h y_h_offset_zt(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {0,0,1,1});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -494,9 +497,9 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   printf("axpy_h_offset_zt         %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_zt_Time);
+  }
 
-  Kokkos::kokkos_free(y_h_offset_zt.view.data());
-
+  {
   deviceField_h y_h_offset_xyz(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {1,1,1,0});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -508,8 +511,9 @@ int run_benchmark(const StreamIndex stream_array_size) {
   printf("axpy_h_offset_xyz        %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_xyz_Time);
 
-  Kokkos::kokkos_free(y_h_offset_xyz.view.data());
+  }
 
+  {
   deviceField_h y_h_offset_xyt(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {1,1,0,1});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -520,9 +524,22 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   printf("axpy_h_offset_xyt        %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_xyt_Time);
+  }
 
-  Kokkos::kokkos_free(y_h_offset_xyt.view.data());
+  {
+  deviceField_h y_h_offset_xzt(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {1,0,1,1});
 
+  for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
+    timer.reset();
+    axpy_h(cinit, x, y_h_offset_xzt);
+    axpy_h_offset_xzt_Time = std::min(axpy_h_offset_xzt_Time, timer.seconds());
+  }
+
+  printf("axpy_h_offset_xzt        %11.4f GB/s\n",
+         1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_xzt_Time);
+  }
+
+  {
   deviceField_h y_h_offset_yzt(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {0,1,1,1});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -533,9 +550,9 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   printf("axpy_h_offset_yzt        %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_yzt_Time);
+  }
 
-  Kokkos::kokkos_free(y_h_offset_yzt.view.data());
-
+  {
   deviceField_h y_h_offset_xyzt(stream_array_size, stream_array_size, stream_array_size, stream_array_size, binit, {1,1,1,1});
 
   for(StreamIndex k = 0; k < STREAM_NTIMES; ++k) {
@@ -546,10 +563,7 @@ int run_benchmark(const StreamIndex stream_array_size) {
 
   printf("axpy_h_offset_xyzt       %11.4f GB/s\n",
          1.0e-9 * 2.0 * nelem * sizeof(val_t) / axpy_h_offset_xyzt_Time);
-
-  Kokkos::kokkos_free(y_h_offset_xyzt.view.data());
-
-  Kokkos::kokkos_free(x.view.data());
+  }
 
   printf(HLINE);
 
